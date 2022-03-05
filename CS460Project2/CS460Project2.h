@@ -14,8 +14,10 @@ struct Color {
 Color getColor(GLint x, GLint y);
 std::vector<line>lines;
 std::vector<line>clip;
+std::vector<line>viewPort;
 std::vector<line>clippedPolygon;
 std::pair<int, int> basePoint;
+void mapToViewPort();
 void draw_line(int x1, int y1, int x2, int y2);
 void mouse(int, int, int, int);
 void mouseMove(int x, int y);
