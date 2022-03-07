@@ -360,6 +360,7 @@ void drawViewPort() {
 	//get the cordinates of each line
 
 void mapToViewPort(){
+	viewPortPoly.clear();
 	int x1VP, y1VP, x2VP,  y2VP;
 
 	float scaleX = (float)(MaxX(viewPort) - MinX(viewPort)) / (MaxX(clip) - MinX(clip));
@@ -372,12 +373,40 @@ void mapToViewPort(){
 		y2VP = MinY(viewPort) + (l.y2 - MinY(clip)) * scaleY;
 		std::cout << x1VP << "," << y1VP << std::endl;
 		draw_line(x1VP, y1VP, x2VP, y2VP);
+		viewPortPoly.push_back({ x1VP, y1VP, x2VP, y2VP });
 	}
 
 	glutPostRedisplay();
 
 
 
+}
+
+void panning(int x, int y) {
+	glClear(GL_COLOR_BUFFER_BIT);
+	for (auto l : viewPort) {
+		int x1Diff = l.x1 - x;
+		int x2Diff = l.x2 - x;
+		int y1Diff = l.y1 - y;
+		int y2Diff = l.y2 - y;
+
+		draw_line(l.x1+x1Diff, l.y1+y1Diff,l.x2+x2Diff,l.y2+y2Diff );
+		
+
+
+	}
+	for (auto l : viewPortPoly) {
+		int x1Diff = l.x1 - x;
+		int x2Diff = l.x2 - x;
+		int y1Diff = l.y1 - y;
+		int y2Diff = l.y2 - y;
+
+		draw_line(l.x1 + x1Diff, l.y1 + y1Diff, l.x2 + x2Diff, l.y2 + y2Diff);
+
+
+
+	}
+	glutPostRedisplay();
 }
 
 
@@ -405,12 +434,14 @@ void processMenu(int option)
 	case 3:
 		Color color = getColor(150, 150);
 		scaling = true;
+	
 		glutMotionFunc(mouseMove);
 		std::cout << color.r << color.g << color.b << std::endl;
 		drawViewPort();
 		mapToViewPort();
 		break;
 	case 4:
+		glutMotionFunc(panning);
 		scaling = false;
 
 	}
@@ -440,7 +471,7 @@ int main(int argc, char** argv) {
 	glutAddMenuEntry("Polygon Clipping", 1);
 	glutAddMenuEntry("Region Filling", 2);
 	glutAddMenuEntry("Window to View Port Mapping", 3);
-	glutAddMenuEntry("Reset Mouse", 4);
+	glutAddMenuEntry("Add Panning Effect", 4);
 	glutAttachMenu(GLUT_MIDDLE_BUTTON);
 
 	glutMouseFunc(mouse);

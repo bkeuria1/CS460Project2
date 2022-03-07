@@ -13,6 +13,7 @@ struct Color {
 };
 Color getColor(GLint x, GLint y);
 std::vector<line>lines;
+std::vector<line>viewPortPoly;
 std::vector<line>clip;
 std::vector<line>viewPort;
 std::vector<line>clippedPolygon;
